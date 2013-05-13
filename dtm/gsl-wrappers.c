@@ -1,4 +1,4 @@
-#include "gflags.h"
+#include <gflags/gflags.h>
 #include "gsl-wrappers.h"
 
 static gsl_rng* RANDOM_NUMBER_GENERATOR = NULL;

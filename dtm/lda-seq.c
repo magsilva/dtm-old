@@ -9,7 +9,7 @@
 
 #include "lda-seq.h"
 
-#include "gflags.h"
+#include <gflags/gflags.h>
 #include <gsl/gsl_linalg.h>
 #include <gsl/gsl_blas.h>
 #include <gsl/gsl_vector_double.h>

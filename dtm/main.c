@@ -7,7 +7,7 @@
 // See the README for this package for details about modifying or
 // distributing this software.
 
-#include "gflags.h"
+#include <gflags/gflags.h>
 
 #include "main.h"
 
@@ -37,7 +37,7 @@ DEFINE_string(params_file,
 	      "settings.txt",
               "A file containing parameters for this run.");
 DEFINE_bool(initialize_lda,
-	    0,
+	    false,
 	    "If true, initialize the model with lda.");
 
 DEFINE_string(outname, "", "");

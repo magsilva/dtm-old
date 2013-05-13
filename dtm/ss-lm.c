@@ -9,7 +9,7 @@
 
 #include "ss-lm.h"
 
-#include "gflags.h"
+#include <gflags/gflags.h>
 
 DECLARE_string(model);
 DECLARE_int32(forward_window);

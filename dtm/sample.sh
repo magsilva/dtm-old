@@ -14,6 +14,7 @@ here in c / c++.  This implementation takes two input files:
 
  (b) foo-seq.dat, which is of the form
 
+
    Number_Timestamps
    number_docs_time_1
    ...
