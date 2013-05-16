@@ -20,7 +20,10 @@ all:	main
 	$(CXX) $(CXXFLAGS) -c $<
 
 main:	$(LOBJECTS)
-	$(CXX) $(CFLAGS) $(LOBJECTS) -o $(OUTPUT_FILE) $(LDFLAGS)
+	$(CXX) $(CXXFLAGS) $(LOBJECTS) -o $(OUTPUT_FILE) $(LDFLAGS)
+
+main-static: main
+	$(CXX) $(CXXFLAGS) $(LOBJECTS) -o $(OUTPUT_FILE) $(LDFLAGS) -static
 
 dbg:	$(LOBJECTS)
 	$(CXX) $(GDB_CFLAGS) $(LOBJECTS) -o $(OUTPUT_FILE) $(LDFLAGS)
