@@ -18,13 +18,12 @@
 
 #define OFFSET 0
 
-// Create the scaled beta distribution, which describes
-// how much weight documents have after n years.
+// Create the scaled beta distribution, which describes how much weight documents have after n years.
 const int kScaledInfluenceMax = 200;
+
 // This mean and variance are relative to the interval [0, 1.0].
 const double kScaledInfluenceMean = 10.0 / kScaledInfluenceMax;
-const double kScaledInfluenceVariance = ((10.0 / kScaledInfluenceMax)
-					 * (10.0 / kScaledInfluenceMax));
+const double kScaledInfluenceVariance = ((10.0 / kScaledInfluenceMax) * (10.0 / kScaledInfluenceMax));
 
 /*
  * a document is a collection of counts and terms
