@@ -9,6 +9,8 @@
 
 #include <gflags/gflags.h>
 
+#define PI 3.141592653589793
+
 #include "data.h"
 
 DEFINE_double(sigma_l,
@@ -307,88 +309,73 @@ gsl_matrix* compute_total_counts(const corpus_seq_t* c)
     return(ret);
 }
 
-// Creates a new array of doubles with kScaledBetaMax
-// elements.
-double* NewScaledInfluence(int size) {
-  double* scaled_influence = new double[size];
+/**
+ * Creates a new array of doubles with kScaledBetaMax elements.
+ */
+double * NewScaledInfluence(int size)
+{
+	double* scaled_influence = new double[size];
   
-  if (FLAGS_influence_flat_years > 0) {
-    // Note that we round up, to make sure we have at least one epoch.
-    int number_epochs = FLAGS_influence_flat_years * FLAGS_time_resolution;
-    double epoch_weight = 1.0 / number_epochs;
-    for (int i=0; i < number_epochs; ++i) {
-      scaled_influence[i] = epoch_weight;
-    }
-    for (int i=number_epochs; i < size; ++i) {
-      scaled_influence[i] = 0.0;
-    }
-    return scaled_influence;
-  }
+	if (FLAGS_influence_flat_years > 0) {
+		// Note that we round up, to make sure we have at least one epoch.
+		int number_epochs = FLAGS_influence_flat_years * FLAGS_time_resolution;
+		double epoch_weight = 1.0 / number_epochs;
+		for (int i = 0; i < number_epochs; ++i) {
+			scaled_influence[i] = epoch_weight;
+		}
+		for (int i = number_epochs; i < size; ++i) {
+			scaled_influence[i] = 0.0;
+		}
+		return scaled_influence;
+	}
 
 
-  /*
-  // Use the simple distribution: 1 at [0], 0 everywhere else.
-  for (int i=0; i < size; ++i) {
-    scaled_influence[i] = 0.0;
-  }
-  scaled_influence[0] = 1.0;
-  //  scaled_beta[1] = 0;
-  return scaled_influence;
-  */
+	/*
+ 	// Use the simple distribution: 1 at [0], 0 everywhere else.
+	for (int i=0; i < size; ++i) {
+		scaled_influence[i] = 0.0;
+	}
+	scaled_influence[0] = 1.0;
+	return scaled_influence;
+	*/
 
-  /*
-  // Simulate a beta distribution with specified mean and variance.
-  double total = 0.0;
-  double tmp = (scaled_beta_mean
-		* (1 - scaled_beta_mean)
-		/ scaled_beta_variance) - 1.0;
-  double beta_alpha = scaled_beta_mean * tmp;
-  double beta_beta = (1 - scaled_beta_mean) * tmp;
-  for (int i=0; i < scaled_beta_max; ++i) {
-    // Offset tmp by 0.5 so we get a centered distribution
-    // and don't run into degeneracy issues.
-    tmp = (i + 0.5) / (scaled_beta_max);
-    scaled_beta[i] = (pow(tmp, beta_alpha - 1.0)
-		      * pow(1 - tmp, beta_beta - 1.0));
-    total += scaled_beta[i];
-  }
-  */
+	/*
+	// Simulate a beta distribution with specified mean and variance.
+	double total = 0.0;
+	double tmp = (scaled_beta_mean * (1 - scaled_beta_mean) / scaled_beta_variance) - 1.0;
+	double beta_alpha = scaled_beta_mean * tmp;
+	double beta_beta = (1 - scaled_beta_mean) * tmp;
+	for (int i = 0; i < scaled_beta_max; ++i) {
+		// Offset tmp by 0.5 so we get a centered distribution and don't run into degeneracy issues.
+		tmp = (i + 0.5) / (scaled_beta_max);
+		scaled_beta[i] = (pow(tmp, beta_alpha - 1.0) * pow(1 - tmp, beta_beta - 1.0));
+		total += scaled_beta[i];
+	}
+	*/
 
 
-  // Handle the log-normal distribution.
-  double total = 0.0;
+	// Handle the log-normal distribution.
+	double total = 0.0;
 
-  // Here, we're interested more in the median.
-  // So we treat the variable mean as median and note this in
-  // our paper.
-  double scaled_influence_mean = FLAGS_influence_mean_years;
-  double scaled_influence_variance = (FLAGS_influence_stdev_years
-				      * FLAGS_influence_stdev_years);
-  double tmp = (1.0
-		+ (scaled_influence_variance
-		   / (scaled_influence_mean
-		      * scaled_influence_mean)));
-  double lognormal_sigma_squared = log(tmp);
-  double lognormal_mu = (log(scaled_influence_mean)
-			 - 0.5 * lognormal_sigma_squared);
-  printf("Median: %.2f\n", exp(lognormal_mu));
-  for (int i = 0; i < size; ++i) {
-    // Shift right by half a timeframe to avoid corner cases.
-    double x = (i / FLAGS_time_resolution) + (1.0 / FLAGS_time_resolution) / 2;
-    double tmp2 = (log(x) - lognormal_mu);
-    scaled_influence[i] = (1.0
-		      / (x * sqrt(lognormal_sigma_squared * 2 * 3.1415926))
-		      * exp(-tmp2 * tmp2
-			    / (2.0
-			       * lognormal_sigma_squared)));
-    total += scaled_influence[i];
-  }
-  
-  for (int i = 0; i < kScaledInfluenceMax; ++i) {
-    scaled_influence[i] /= total;
-  }
+	// Here, we're interested more in the median. So we treat the variable mean as
+	// median and note this in our paper.
+	double scaled_influence_mean = FLAGS_influence_mean_years;
+	double scaled_influence_variance = (FLAGS_influence_stdev_years * FLAGS_influence_stdev_years);
+	double tmp = (1.0 + (scaled_influence_variance / (scaled_influence_mean * scaled_influence_mean)));
+	double lognormal_sigma_squared = log(tmp);
+	double lognormal_mu = (log(scaled_influence_mean) - 0.5 * lognormal_sigma_squared);
+	double halfTimeframe = (1.0 / FLAGS_time_resolution) / 2;
+	printf("Median: %.2f\n", exp(lognormal_mu));
+	for (int i = 0; i < size; ++i) {
+		// Shift right by half a timeframe to avoid corner cases.
+		double x = (i / FLAGS_time_resolution) + halfTimeframe;
+		double tmp2 = (log(x) - lognormal_mu);
+		scaled_influence[i] = (1.0 / (x * sqrt(lognormal_sigma_squared * 2 * PI)) * exp(-tmp2 * tmp2/ (2.0 * lognormal_sigma_squared)));
+		total += scaled_influence[i];
+	}
+	for (int i = 0; i < kScaledInfluenceMax; ++i) {
+		scaled_influence[i] /= total;
+	}
 
-  return scaled_influence;
-  
+	return scaled_influence;
 }
-

@@ -1,5 +1,6 @@
 #include <gflags/gflags.h>
 #include "gsl-wrappers.h"
+#include <sys/stat.h>
 
 static gsl_rng* RANDOM_NUMBER_GENERATOR = NULL;
 
@@ -506,13 +507,17 @@ int directory_exist(const char *dname)
 
 void make_directory(char* name)
 {
+#if _POSIX_C_SOURCE || __MACH__
     mkdir(name, S_IRUSR|S_IWUSR|S_IXUSR);
+#else
+    mkdir(name);
+#endif
 }
 
 gsl_rng* new_random_number_generator()
 {
     gsl_rng* random_number_generator = gsl_rng_alloc(gsl_rng_taus);
-    long t1;
+    time_t t1;
     (void) time(&t1);
 
     if (FLAGS_rng_seed) {

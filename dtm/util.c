@@ -12,7 +12,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
-#include <sys/wait.h>
 #include <sys/stat.h>
 #include <errno.h>
 #include <ctype.h>

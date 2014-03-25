@@ -50,9 +50,12 @@ USA
 A. COMPILING
 
 You will need to have several libraries installed to compile this
-package.  One of these is gsl-devel.  Depending on your package
-manager, you may be able to install this with *one* of the following
-commands:
+package:
+	gsl
+	gflags
+
+Depending on your package manager, you may be able to install these
+ with *one* of the following commands:
 
   sudo aptitude install libgsl0-dev # Ubuntu 10.04
   sudo zypper install gsl-devel     # OpenSUSE 11.2
