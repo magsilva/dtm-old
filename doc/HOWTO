@@ -1,0 +1,55 @@
+# Para um tópico
+data0 = scan("topic-000-var-e-log-prob.dat")
+b0 = matrix(data0, ncol=10, byrow=TRUE)
+write.table(b0, file="dist-topic0.csv", sep=";")
+
+
+# Processa todos tópicos
+# Para cada tópico, gera um arquivo com a probabilidade de cada
+# termo para cada ano
+# TODO: rodar exp() nos valores
+topics = list()
+for (i in 0:9) {
+	filename = paste("topic-00", i, sep = "")
+	filename = paste(filename, "-var-e-log-prob.dat", sep = "")
+	data = scan(filename)
+	topic = matrix(data, ncol=9, byrow=TRUE)
+	filename = paste("dist-topic", i, sep = "")
+	filename = paste(filename, ".csv", sep = "")
+	write.table(topic, file=filename, sep=";")
+}
+
+
+for (i in 10:49) {
+	filename = paste("topic-0", i, sep = "")
+	filename = paste(filename, "-var-e-log-prob.dat", sep = "")
+	data = scan(filename)
+	topic = matrix(data, ncol=9, byrow=TRUE)
+	filename = paste("dist-topic", i, sep = "")
+	filename = paste(filename, ".csv", sep = "")
+	write.table(topic, file=filename, sep=";")
+}
+
+# - gam.dat: The gammas associated with each document.  Divide these by
+#  the sum for each document to get expected topic mixtures.
+# Proportion of topic 5 in document 3:
+# e.theta[3, 5]
+a = scan("gam.dat")
+b = matrix(a, ncol=50, byrow=TRUE)
+rs = rowSums(b)
+e.theta = b / rs
+write.table(e.theta, file="documents_topics.csv", sep=";")
+
+#Treinamento dos tópicos
+./main \
+  --ntopics=25 \
+  --mode=fit \
+  --rng_seed=0 \
+  --initialize_lda=true \
+  --corpus_prefix=example/SBSC \
+  --outname=example/model_run \
+  --top_chain_var=0.005 \
+  --alpha=2.0 \
+  --lda_sequence_min_iter=10 \
+  --lda_sequence_max_iter=30 \
+  --lda_max_em_iter=10
