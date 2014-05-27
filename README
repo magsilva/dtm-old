@@ -82,6 +82,11 @@ by typing
 
 (although we suggest you start out with the example in dtm/sample.sh).
 
+You should also replace 'main' by the appropriate executable (depending
+on your computer architecture and operating system). We currently
+provide binaries for Linux (dtm-linux32 and dtm-linux64), MacOS (dtm-darwin64)
+and Windows (dtm-win32.exe and dtm-win64.exe).
+
 C. SUPPORT and QUESTIONS
 
 This software is provided as-is, without any warranty or support,
