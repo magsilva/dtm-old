@@ -6,7 +6,7 @@ make main-static \
 	CCC=x86_64-w64-mingw32-g++ \
 	CXX=x86_64-w64-mingw32-g++ \
 	AS=x86_64-w64-mingw32-as \
-	OUTPUT_FILE="dtm-win32"
+	OUTPUT_FILE="dtm-win32.exe"
 
 make clean
 make main-static \
@@ -16,7 +16,7 @@ make main-static \
 	CCC=i686-w64-mingw32-g++ \
 	CXX=i686-w64-mingw32-g++ \
 	AS=i686-w64-mingw32-as \
-	OUTPUT_FILE="dtm-win64"
+	OUTPUT_FILE="dtm-win64.exe"
 
 make clean
 make main \
