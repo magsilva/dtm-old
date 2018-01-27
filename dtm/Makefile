@@ -4,8 +4,7 @@ LIB = ../lib
 GSLWRAP_LIB = ../gslwrap
 OUTPUT_FILE ?= dtm
 OPTFLAGS ?= -O2
-EXTRA_INCLUDE_FLAGS =
-
+STRIP ?= strip
 CXXFLAGS += -I ${LIB} -I ${LIB}/math -I ${GSLWRAP_LIB}/include -I ${GSLWRAP_LIB}/include/gslwrap 
 
 LDFLAGS += -lgsl -lm -lgslcblas -lgflags
@@ -18,8 +17,8 @@ all:	main
 	$(CXX) $(CXXFLAGS) -c $<
 
 main:	$(LOBJECTS)
-	$(CXX) $(OPTFLAGS) $(CXXFLAGS) $(EXTRA_INCLUDE_FLAGS) $(LOBJECTS) -o $(OUTPUT_FILE) $(LDFLAGS) $(EXTRA_LDFLAGS)
-	strip $(OUTPUT_FILE)
+	$(CXX) $(OPTFLAGS) $(CXXFLAGS) $(LOBJECTS) -o $(OUTPUT_FILE) $(LDFLAGS) $(EXTRA_LDFLAGS)
+	$(STRIP) $(OUTPUT_FILE)
 
 clean:
 	-rm -f *.o
