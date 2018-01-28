@@ -1,3 +1,18 @@
+THIS REPPOSITORY HAS BEEN ARCHIVED
+
+Please, use the new repository/project at:
+https://github.com/magsilva/dtm
+
+Reason for archival: this repository was created before Blei creating
+his official project at Github (https://github.com/blei-lab/dtm). Hence
+this project is not shown as its fork (which is not appropriate). With
+the new project at magsilva/dtm, we how have it as a proper "fork" of
+blei-lab/dtm.
+
+
+
+
+
 ***************************
 Dynamic Topic Models and the Document Influence Model
 ***************************
